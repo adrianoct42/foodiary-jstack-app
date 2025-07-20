@@ -13,15 +13,20 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { AuthProvider } from "../contexts/AuthContext";
 import { useAuth } from "../hooks/useAuth";
 import "../styles/global.css";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 SplashScreen.preventAutoHideAsync();
+
+const queryClient = new QueryClient();
 
 export default function Layout() {
   return (
     <SafeAreaProvider>
-      <AuthProvider>
-        <RootLayout />
-      </AuthProvider>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <RootLayout />
+        </AuthProvider>
+      </QueryClientProvider>
     </SafeAreaProvider>
   );
 }
