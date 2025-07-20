@@ -1,11 +1,11 @@
-import { CameraView, useCameraPermissions } from "expo-camera";
-import { StatusBar } from "expo-status-bar";
-import { CameraIcon, CheckIcon, Trash2Icon, XIcon } from "lucide-react-native";
-import { useRef, useState } from "react";
-import { Image, Modal, Text, View } from "react-native";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import { colors } from "../styles/colors";
-import { Button } from "./Button";
+import { CameraView, useCameraPermissions } from 'expo-camera';
+import { StatusBar } from 'expo-status-bar';
+import { CameraIcon, CheckIcon, Trash2Icon, XIcon } from 'lucide-react-native';
+import { useRef, useState } from 'react';
+import { Image, Modal, Text, View } from 'react-native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { colors } from '../styles/colors';
+import { Button } from './Button';
 
 interface ICameraModalProps {
   open: boolean;
@@ -15,7 +15,7 @@ interface ICameraModalProps {
 export function CameraModal({ onClose, open }: ICameraModalProps) {
   const [photoUri, setPhotoUri] = useState<string | null>(null);
   const [permission, requestPermission] = useCameraPermissions();
-
+  
   const cameraRef = useRef<CameraView>(null);
 
   function handleCloseModal() {
@@ -29,7 +29,7 @@ export function CameraModal({ onClose, open }: ICameraModalProps) {
     }
 
     const { uri } = await cameraRef.current.takePictureAsync({
-      imageType: "jpg",
+      imageType: 'jpg',
     });
 
     setPhotoUri(uri);
@@ -59,7 +59,9 @@ export function CameraModal({ onClose, open }: ICameraModalProps) {
             <Text className="text-white text-center px-10 text-base font-sans-regular mb-4">
               Precisamos de permissão para acessar a câmera!
             </Text>
-            <Button onPress={requestPermission}>Dar permissão</Button>
+            <Button onPress={requestPermission}>
+              Dar permissão
+            </Button>
           </View>
         )}
 
@@ -72,7 +74,9 @@ export function CameraModal({ onClose, open }: ICameraModalProps) {
                 </Button>
               </View>
 
-              {!photoUri && <CameraView ref={cameraRef} style={{ flex: 1 }} />}
+              {!photoUri && (
+                <CameraView ref={cameraRef} style={{ flex: 1 }} />
+              )}
 
               {photoUri && (
                 <Image
@@ -85,18 +89,12 @@ export function CameraModal({ onClose, open }: ICameraModalProps) {
               {!photoUri && (
                 <View className="p-5 pt-6 items-center gap-2 pb-12">
                   <View className="flex-row">
-                    <Button
-                      size="icon"
-                      color="dark"
-                      onPress={handleTakePicture}
-                    >
+                    <Button size="icon" color="dark" onPress={handleTakePicture}>
                       <CameraIcon size={20} color={colors.lime[600]} />
                     </Button>
                   </View>
 
-                  <Text className="text-gray-100 text-base font-sans-regular">
-                    Tirar foto
-                  </Text>
+                  <Text className="text-gray-100 text-base font-sans-regular">Tirar foto</Text>
                 </View>
               )}
 

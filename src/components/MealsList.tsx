@@ -1,33 +1,33 @@
-import { FlatList, Text, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { DailyStats } from "./DailyStats";
-import { DateSwitcher } from "./DateSwitcher";
-import { MealCard } from "./MealCard";
+import { FlatList, Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { DailyStats } from './DailyStats';
+import { DateSwitcher } from './DateSwitcher';
+import { MealCard } from './MealCard';
 
 const meals = [
   {
     id: String(Math.random()),
-    name: "Café da manhã",
+    name: 'Café da manhã',
   },
   {
     id: String(Math.random()),
-    name: "Almoço",
+    name: 'Almoço',
   },
   {
     id: String(Math.random()),
-    name: "Janta",
+    name: 'Janta',
   },
   {
     id: String(Math.random()),
-    name: "Café da manhã",
+    name: 'Café da manhã',
   },
   {
     id: String(Math.random()),
-    name: "Almoço",
+    name: 'Almoço',
   },
   {
     id: String(Math.random()),
-    name: "Janta (ultimo)",
+    name: 'Janta (ultimo)',
   },
 ];
 
@@ -67,22 +67,27 @@ function MealsListHeader() {
 }
 
 function Separator() {
-  return <View className="h-8" />;
+  return (
+    <View className="h-8" />
+  );
 }
 
 export function MealsList() {
   const { bottom } = useSafeAreaInsets();
-
+  
   return (
     <FlatList
       data={meals}
       contentContainerStyle={{ paddingBottom: 80 + bottom + 16 }}
-      keyExtractor={(meal) => meal.id}
+      keyExtractor={meal => meal.id}
       ListHeaderComponent={MealsListHeader}
       ItemSeparatorComponent={Separator}
       renderItem={({ item: meal }) => (
         <View className="mx-5">
-          <MealCard id={meal.id} name={meal.name} />
+          <MealCard
+            id={meal.id}
+            name={meal.name}
+          />
         </View>
       )}
     />

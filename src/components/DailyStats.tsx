@@ -1,6 +1,6 @@
-import { Text, View } from "react-native";
-import Svg, { Path } from "react-native-svg";
-import { cn } from "../utils/cn";
+import { Text, View } from 'react-native';
+import Svg, { Path } from 'react-native-svg';
+import { cn } from '../utils/cn';
 
 interface IArcProps {
   percentage: number;
@@ -11,7 +11,13 @@ interface IArcProps {
   className?: string;
 }
 
-function Arc({ percentage, color, radius, strokeWidth, className }: IArcProps) {
+function Arc({
+  percentage,
+  color,
+  radius,
+  strokeWidth,
+  className,
+}: IArcProps) {
   const semiCircumference = Math.PI * radius;
   const arcLength = (percentage / 100) * semiCircumference;
 
@@ -20,7 +26,10 @@ function Arc({ percentage, color, radius, strokeWidth, className }: IArcProps) {
 
   return (
     <View className={cn(className)}>
-      <Svg width={radius * 2 + strokeWidth} height={radius + strokeWidth}>
+      <Svg
+        width={radius * 2 + strokeWidth}
+        height={radius + strokeWidth}
+      >
         <Path
           d={arcDraw}
           fill="none"
@@ -46,7 +55,7 @@ function Arc({ percentage, color, radius, strokeWidth, className }: IArcProps) {
 type MacroProgress = {
   goal: number;
   current: number;
-};
+}
 
 interface IGoalArcsProps {
   calories: MacroProgress;
@@ -110,28 +119,25 @@ export function DailyStats({
         <View className="items-center w-1/3 justify-center">
           <Text className="font-sans-bold text-support-teal text-base">
             {Math.round(proteins.current)}g
-            <Text className="text-xs text-gray-700"> / {proteins.goal}g</Text>
+            <Text className="text-sm text-gray-700"> / {proteins.goal}g</Text>
           </Text>
-          <Text className="mt-1 text-sm text-gray-700">Proteínas</Text>
+          <Text className="text-sm text-gray-700">Proteínas</Text>
         </View>
 
         <View className="items-center w-1/3 justify-center">
           <Text className="font-sans-bold text-support-yellow text-base">
             {Math.round(carbohydrates.current)}g
-            <Text className="text-xs text-gray-700">
-              {" "}
-              / {carbohydrates.goal}g
-            </Text>
+            <Text className="text-sm text-gray-700"> / {carbohydrates.goal}g</Text>
           </Text>
-          <Text className="mt-1 text-sm text-gray-700">Carboidratos</Text>
+          <Text className="text-sm text-gray-700">Carboidratos</Text>
         </View>
 
         <View className="items-center w-1/3 justify-center">
           <Text className="font-sans-bold text-support-orange text-base">
             {Math.round(fats.current)}g
-            <Text className="text-xs text-gray-700"> / {fats.goal}g</Text>
+            <Text className="text-sm text-gray-700"> / {fats.goal}g</Text>
           </Text>
-          <Text className="mt-1 text-sm text-gray-700">Gorduras</Text>
+          <Text className="text-sm text-gray-700">Gorduras</Text>
         </View>
       </View>
     </View>
