@@ -1,24 +1,8 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as FileSystem from "expo-file-system";
 import { httpClient } from "../services/httpClient";
-import { router } from "expo-router";
 
-/*      
-      const { uploadURL } = data;
-
-      const response = await fetch(uri);
-      const file = await response.blob();
-
-      await fetch(uploadURL, {
-        method: "PUT",
-        body: file,
-        headers: {
-          "Content-Type": file.type,
-        },
-      }); 
-*/
-
-type CreateMealRespose = {
+type CreateMealResponse = {
   uploadURL: string;
   mealId: string;
 };
@@ -29,9 +13,11 @@ type CreateMealParams = {
 };
 
 export function useCreateMeal({ fileType, onSuccess }: CreateMealParams) {
-  const { mutateAsync: createMeal, isPending } = useMutation({
+  const queryClient = useQueryClient();
+
+  const { mutateAsync, isPending } = useMutation({
     mutationFn: async (uri: string) => {
-      const { data } = await httpClient.post<CreateMealRespose>("/meals", {
+      const { data } = await httpClient.post<CreateMealResponse>("/meals", {
         fileType,
       });
 
@@ -39,12 +25,17 @@ export function useCreateMeal({ fileType, onSuccess }: CreateMealParams) {
         httpMethod: "PUT",
         uploadType: FileSystem.FileSystemUploadType.BINARY_CONTENT,
       });
+
       return { mealId: data.mealId };
     },
     onSuccess: ({ mealId }) => {
-      console.log("Meal criada!");
       onSuccess(mealId);
+      queryClient.refetchQueries({ queryKey: ["meals"] });
     },
   });
-  return { createMeal, isLoading: isPending };
+
+  return {
+    createMeal: mutateAsync,
+    isLoading: isPending,
+  };
 }
