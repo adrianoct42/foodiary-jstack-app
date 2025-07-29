@@ -3,6 +3,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { createContext, useCallback, useEffect, useState } from "react";
 
 import { httpClient } from "../services/httpClient";
+import { router } from "expo-router";
 
 type User = {
   email: string;
@@ -103,12 +104,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signOut = useCallback(async () => {
     setToken(null);
     await AsyncStorage.removeItem(TOKEN_STORAGE_KEY);
+    router.replace("/");
   }, []);
 
   return (
     <AuthContext.Provider
       value={{
-        isLoggedIn: !!user,
+        isLoggedIn: !!token,
         isLoading: isLoadingToken || isFetching,
         user: user ?? null,
         signIn,

@@ -19,11 +19,11 @@ import {
 import { useEffect, useState } from "react";
 import { Alert, Modal, Text, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { router } from "expo-router";
+import { useCreateMeal } from "../hooks/useCreateMeal";
 import { colors } from "../styles/colors";
 import { cn } from "../utils/cn";
 import { Button } from "./Button";
-import { useCreateMeal } from "../hooks/useCreateMeal";
-import { router } from "expo-router";
 
 interface IAudioModalProps {
   open: boolean;

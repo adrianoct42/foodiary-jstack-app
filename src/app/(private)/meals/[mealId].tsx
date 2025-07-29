@@ -1,9 +1,22 @@
 import { useQuery } from "@tanstack/react-query";
 import { router, useLocalSearchParams } from "expo-router";
-import { ActivityIndicator, Text, View } from "react-native";
-import { Button } from "../../../components/Button";
+import { ActivityIndicator, ScrollView, Text, View } from "react-native";
 import { Logo } from "../../../components/Logo";
 import { httpClient } from "../../../services/httpClient";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
+import { colors } from "../../../styles/colors";
+import { ChevronLeft } from "lucide-react-native";
+import React from "react";
+
+type MealWithTotals = Meal & {
+  totalCalories: number;
+  totalProteins: number;
+  totalCarbohydrates: number;
+  totalFats: number;
+};
 
 type Meal = {
   id: string;
@@ -23,19 +36,38 @@ type Meal = {
 
 export default function MealDetails() {
   const { mealId } = useLocalSearchParams();
+  const { bottom } = useSafeAreaInsets();
 
-  const { data: meal, isFetching } = useQuery({
+  const { data: meal, isFetching } = useQuery<MealWithTotals>({
     queryKey: ["meal", mealId],
     staleTime: Infinity,
     queryFn: async () => {
       const { data } = await httpClient.get<{ meal: Meal }>(`/meals/${mealId}`);
-      return data.meal;
+
+      let currentTotalCalories: number = 0;
+      let currentTotalProteins: number = 0;
+      let currentTotalCarbohydrates: number = 0;
+      let currentTotalFats: number = 0;
+
+      for (let i = 0; i < data.meal.foods.length; i++) {
+        currentTotalCalories += data.meal.foods[i].calories;
+        currentTotalProteins += data.meal.foods[i].proteins;
+        currentTotalCarbohydrates += data.meal.foods[i].carbohydrates;
+        currentTotalFats += data.meal.foods[i].fats;
+      }
+
+      return {
+        ...data.meal,
+        totalCalories: currentTotalCalories,
+        totalProteins: currentTotalProteins,
+        totalCarbohydrates: currentTotalCarbohydrates,
+        totalFats: currentTotalFats,
+      };
     },
     refetchInterval: (query) => {
       if (query.state.data?.status === "success") {
         return false;
       }
-
       return 2_000;
     },
   });
@@ -49,11 +81,73 @@ export default function MealDetails() {
     );
   }
 
-  return (
-    <View className="flex-1 items-center justify-center">
-      <Button onPress={router.back}>Voltar</Button>
+  const Separator = () => {
+    return (
+      <View className="h-px w-full my-4 border-b border-dashed border-gray-500" />
+    );
+  };
 
-      <Text>{JSON.stringify(meal, null, 2)}</Text>
-    </View>
+  const { totalCarbohydrates, totalProteins, totalFats } = meal;
+
+  return (
+    <>
+      <SafeAreaView>
+        <View
+          style={{ backgroundColor: colors.black[700] }}
+          className={`py-2 pr-4 flex-row items-center justify-start`}
+        >
+          <View className="w-12 h-12 flex items-center justify-center">
+            <ChevronLeft onPress={router.back} color="white" />
+          </View>
+          <Text style={{ color: colors.gray[300] }}>Macros Totais</Text>
+        </View>
+      </SafeAreaView>
+
+      <View className="p-5 w-full flex-row items-center justify-between">
+        <View className="items-center w-1/3 justify-center">
+          <Text className="font-sans-bold text-support-teal text-base">
+            {Math.round(totalCarbohydrates)}g
+          </Text>
+          <Text className="text-sm text-gray-700">Carboidratos</Text>
+        </View>
+
+        <View className="items-center w-1/3 justify-center">
+          <Text className="font-sans-bold text-support-yellow text-base">
+            {Math.round(totalProteins)}g
+          </Text>
+          <Text className="text-sm text-gray-700">Proteínas</Text>
+        </View>
+
+        <View className="items-center w-1/3 justify-center">
+          <Text className="font-sans-bold text-support-orange text-base">
+            {Math.round(totalFats)}g
+          </Text>
+          <Text className="text-sm text-gray-700">Gorduras</Text>
+        </View>
+      </View>
+      <Separator />
+      <View
+        style={{ marginBottom: bottom + 300 }}
+        className="flex p-5 gap-6 items-start justify-center"
+      >
+        <Text className="font-sans-semibold text-2xl">Almoço Fitness</Text>
+        <Text
+          style={{ color: colors.gray[700] }}
+          className="font-sans-medium text-base"
+        >
+          Itens
+        </Text>
+        <ScrollView className="w-full">
+          {meal.foods.map((mealItem, index) => (
+            <React.Fragment key={index}>
+              <Text className="p-[14px] font-sans-regular text-base">
+                {mealItem.quantity} {mealItem.name}
+              </Text>
+              <View className="h-px my-4 w-full bg-gray-500" />
+            </React.Fragment>
+          ))}
+        </ScrollView>
+      </View>
+    </>
   );
 }

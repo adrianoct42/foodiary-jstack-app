@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity, View } from "react-native";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { cn } from "../utils/cn";
 
 interface IOptionSelectorProps {
@@ -18,7 +18,10 @@ export function OptionsSelector({
   value,
 }: IOptionSelectorProps) {
   return (
-    <View className="gap-4 w-full">
+    <ScrollView
+      className="w-full"
+      contentContainerStyle={{ gap: 16, paddingBottom: 16, paddingRight: 16 }}
+    >
       {options.map((option) => (
         <TouchableOpacity
           key={option.value}
@@ -37,19 +40,27 @@ export function OptionsSelector({
             <Text>{option.icon}</Text>
           </View>
 
-          <View>
-            <Text className="text-black-700 text-base font-sans-semibold">
+          <View className="flex-1">
+            <Text
+              className="text-black-700 text-base font-sans-semibold"
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
               {option.title}
             </Text>
 
             {option.description && (
-              <Text className="text-sm font-sans-regular text-gray-700">
+              <Text
+                className="text-sm font-sans-regular text-gray-700"
+                numberOfLines={2}
+                ellipsizeMode="tail"
+              >
                 {option.description}
               </Text>
             )}
           </View>
         </TouchableOpacity>
       ))}
-    </View>
+    </ScrollView>
   );
 }

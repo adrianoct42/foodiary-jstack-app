@@ -4,12 +4,10 @@ import { CameraIcon, CheckIcon, Trash2Icon, XIcon } from "lucide-react-native";
 import { useRef, useState } from "react";
 import { Image, Modal, Text, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { router } from "expo-router";
+import { useCreateMeal } from "../hooks/useCreateMeal";
 import { colors } from "../styles/colors";
 import { Button } from "./Button";
-import { httpClient } from "../services/httpClient";
-import { useMutation } from "@tanstack/react-query";
-import { useCreateMeal } from "../hooks/useCreateMeal";
-import { router } from "expo-router";
 
 interface ICameraModalProps {
   open: boolean;

@@ -9,7 +9,7 @@ export function HomeHeader() {
 
   return (
     <View className="bg-lime-400 h-[130px]">
-      <SafeAreaView className="px-4 flex-row items-center justify-between">
+      <SafeAreaView className="py-4 px-4 flex-row items-center justify-between">
         <View>
           <Text className="text-gray-700 text-sm font-sans-regular">
             Olá, 👋
