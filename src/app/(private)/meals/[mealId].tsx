@@ -10,6 +10,8 @@ import {
 import { colors } from "../../../styles/colors";
 import { ChevronLeft } from "lucide-react-native";
 import React from "react";
+import HorizontalBar from "../../../components/HorizontalBar";
+import { StatusBar } from "expo-status-bar";
 
 type MealWithTotals = Meal & {
   totalCalories: number;
@@ -89,45 +91,58 @@ export default function MealDetails() {
 
   const { totalCarbohydrates, totalProteins, totalFats } = meal;
 
+  const calculatePercentage = (macronutrients: number) => {
+    return Math.round(
+      (macronutrients / (totalCarbohydrates + totalProteins + totalFats)) * 100
+    );
+  };
+
   return (
     <>
-      <SafeAreaView>
-        <View
-          style={{ backgroundColor: colors.black[700] }}
-          className={`py-2 pr-4 flex-row items-center justify-start`}
-        >
+      <StatusBar style="light" />
+      <View style={{ backgroundColor: colors.black[700] }} className="h-20">
+        <SafeAreaView className="flex-row items-center justify-start">
           <View className="w-12 h-12 flex items-center justify-center">
             <ChevronLeft onPress={router.back} color="white" />
           </View>
           <Text style={{ color: colors.gray[300] }}>Macros Totais</Text>
-        </View>
-      </SafeAreaView>
+        </SafeAreaView>
+      </View>
 
-      <View className="p-5 w-full flex-row items-center justify-between">
-        <View className="items-center w-1/3 justify-center">
-          <Text className="font-sans-bold text-support-teal text-base">
-            {Math.round(totalCarbohydrates)}g
-          </Text>
-          <Text className="text-sm text-gray-700">Carboidratos</Text>
-        </View>
+      <View className="p-5 gap-6 w-full flex items-center justify-between">
+        <View className="flex-row">
+          <View className="items-center w-1/3 justify-center">
+            <Text className="text-sm text-gray-700">Carboidratos</Text>
+            <Text className="font-sans-bold text-support-yellow text-base">
+              {Math.round(totalCarbohydrates)}g (
+              {calculatePercentage(totalCarbohydrates)}%)
+            </Text>
+          </View>
 
-        <View className="items-center w-1/3 justify-center">
-          <Text className="font-sans-bold text-support-yellow text-base">
-            {Math.round(totalProteins)}g
-          </Text>
-          <Text className="text-sm text-gray-700">Proteínas</Text>
-        </View>
+          <View className="items-center w-1/3 justify-center">
+            <Text className="text-sm text-gray-700">Proteínas</Text>
+            <Text className="font-sans-bold text-support-teal text-base">
+              {Math.round(totalProteins)}g ({calculatePercentage(totalProteins)}
+              %)
+            </Text>
+          </View>
 
-        <View className="items-center w-1/3 justify-center">
-          <Text className="font-sans-bold text-support-orange text-base">
-            {Math.round(totalFats)}g
-          </Text>
-          <Text className="text-sm text-gray-700">Gorduras</Text>
+          <View className="items-center w-1/3 justify-center">
+            <Text className="text-sm text-gray-700">Gorduras</Text>
+            <Text className="font-sans-bold text-support-orange text-base">
+              {Math.round(totalFats)}g ({calculatePercentage(totalFats)}%)
+            </Text>
+          </View>
         </View>
+        <HorizontalBar
+          carbohydrates={totalCarbohydrates}
+          proteins={totalProteins}
+          fats={totalFats}
+        />
       </View>
       <Separator />
       <View
-        style={{ marginBottom: bottom + 300 }}
+        style={{ marginBottom: bottom + 325 }}
         className="flex p-5 gap-6 items-start justify-center"
       >
         <Text className="font-sans-semibold text-2xl">Almoço Fitness</Text>

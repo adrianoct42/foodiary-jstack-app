@@ -160,7 +160,12 @@ export function AudioModal({ onClose, open }: IAudioModalProps) {
                   <Button
                     size="icon"
                     color="dark"
-                    onPress={() => player.play()}
+                    onPress={async () => {
+                      if (player.currentTime >= player.duration) {
+                        await player.seekTo(0);
+                      }
+                      player.play();
+                    }}
                   >
                     <PlayIcon size={20} color={colors.lime[600]} />
                   </Button>

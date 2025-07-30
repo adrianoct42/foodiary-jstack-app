@@ -8,6 +8,7 @@ import { httpClient } from "../services/httpClient";
 import { DailyStats } from "./DailyStats";
 import { DateSwitcher } from "./DateSwitcher";
 import { MealCard } from "./MealCard";
+import { StatusBar } from "expo-status-bar";
 
 type Meal = {
   name: string;
@@ -156,33 +157,38 @@ export function MealsList() {
   }
 
   return (
-    <FlatList
-      data={meals}
-      contentContainerStyle={{ paddingBottom: 80 + bottom + 16 }}
-      keyExtractor={(meal) => meal.id}
-      ListEmptyComponent={
-        <Text className="pt-2 text-center">Nenhuma refeição cadastrada...</Text>
-      }
-      ListHeaderComponent={
-        <MealsListHeader
-          currentDate={currentDate}
-          meals={meals ?? []}
-          onNextDate={handleNextDate}
-          onPreviousDate={handlePreviousDate}
-        />
-      }
-      ItemSeparatorComponent={Separator}
-      renderItem={({ item: meal }) => (
-        <View className="mx-5">
-          <MealCard
-            id={meal.id}
-            name={meal.name}
-            icon={meal.icon}
-            foods={meal.foods}
-            createdAt={new Date(meal.createdAt)}
+    <>
+      <StatusBar style="dark" />
+      <FlatList
+        data={meals}
+        contentContainerStyle={{ paddingBottom: 80 + bottom + 16 }}
+        keyExtractor={(meal) => meal.id}
+        ListEmptyComponent={
+          <Text className="pt-2 text-center">
+            Nenhuma refeição cadastrada...
+          </Text>
+        }
+        ListHeaderComponent={
+          <MealsListHeader
+            currentDate={currentDate}
+            meals={meals ?? []}
+            onNextDate={handleNextDate}
+            onPreviousDate={handlePreviousDate}
           />
-        </View>
-      )}
-    />
+        }
+        ItemSeparatorComponent={Separator}
+        renderItem={({ item: meal }) => (
+          <View className="mx-5">
+            <MealCard
+              id={meal.id}
+              name={meal.name}
+              icon={meal.icon}
+              foods={meal.foods}
+              createdAt={new Date(meal.createdAt)}
+            />
+          </View>
+        )}
+      />
+    </>
   );
 }
